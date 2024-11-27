@@ -1,6 +1,8 @@
 package com.oocl.springbootemployee.controller;
 
 
+import com.oocl.springbootemployee.dto.EmployeeResponse;
+import com.oocl.springbootemployee.mapper.EmployeeMapper;
 import com.oocl.springbootemployee.model.Employee;
 import com.oocl.springbootemployee.model.Gender;
 import com.oocl.springbootemployee.service.EmployeeService;
@@ -23,14 +25,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, EmployeeMapper employeeMapper) {
         this.employeeService = employeeService;
+        this.employeeMapper = employeeMapper;
     }
 
     @GetMapping
-    public List<Employee> getEmployeeList() {
-        return employeeService.findAll();
+    public List<EmployeeResponse> getEmployeeList() {
+        List<Employee> employeeList = employeeService.findAll();
+        return employeeMapper.toResponses(employeeList);
     }
 
     @GetMapping("/{id}")
